@@ -1389,15 +1389,21 @@ bot.on('text', async (ctx) => {
       const pengeluaran = parsed.type === 'pengeluaran' ? parsed.amountText : '';
 
       await appendRow([
-        new Intl.DateTimeFormat('id-ID', {
-        timeZone: getTimezone(),
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
-      }).format(now).replace(',', ''),
+        (() => {
+        const parts = new Intl.DateTimeFormat('en-GB', {
+          timeZone: getTimezone(),
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false
+        }).formatToParts(now);
+
+        const get = (type) => parts.find(p => p.type === type)?.value || '';
+
+        return `${get('day')}/${get('month')}/${get('year')} ${get('hour')}:${get('minute')}`;
+      })(),
         parsed.category,
         pemasukan,
         pengeluaran,

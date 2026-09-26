@@ -112,7 +112,7 @@ function formatRupiah(n) {
 }
 
 function parseDateParts(dateText) {
-  const m = String(dateText).trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  const m = String(dateText).trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:\s+\d{1,2}:\d{2})?$/);
   if (!m) return null;
 
   return {
@@ -1389,7 +1389,15 @@ bot.on('text', async (ctx) => {
       const pengeluaran = parsed.type === 'pengeluaran' ? parsed.amountText : '';
 
       await appendRow([
-        now.toLocaleDateString('id-ID', { timeZone: getTimezone() }),
+        new Intl.DateTimeFormat('id-ID', {
+        timeZone: getTimezone(),
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      }).format(now).replace(',', ''),
         parsed.category,
         pemasukan,
         pengeluaran,

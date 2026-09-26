@@ -73,7 +73,7 @@ function logError(message, err = null) {
 }
 
 function isOwner(ctx) {
-  const ownerId = String(config.ownerUserId).trim();
+  const ownerId = String(ownerUserId).trim();
   const userId = String(ctx.from?.id || '').trim();
   return ownerId === userId;
 }

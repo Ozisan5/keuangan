@@ -337,7 +337,16 @@ async function getTodayTransactions() {
     const pemasukan = row[2] || '';
     const pengeluaran = row[3] || '';
 
-    if (tanggal !== today) continue;
+    const parsedTanggal = parseDateParts(tanggal);
+    const parsedToday = parseDateParts(today);
+
+    if (
+      !parsedTanggal ||
+      !parsedToday ||
+      parsedTanggal.day !== parsedToday.day ||
+      parsedTanggal.month !== parsedToday.month ||
+      parsedTanggal.year !== parsedToday.year
+    ) continue;
 
     const pemasukanNum = parseRupiahTextToNumber(pemasukan);
     const pengeluaranNum = parseRupiahTextToNumber(pengeluaran);
@@ -359,6 +368,7 @@ async function getTodayTransactions() {
     items: result,
     totalPemasukan,
     totalPengeluaran,
+    saldo: totalPemasukan - totalPengeluaran,
   };
 }
 
@@ -1156,6 +1166,9 @@ bot.command('last', async (ctx) => {
     );
     lines.push(
       `Pengeluaran: ${data.totalPengeluaran > 0 ? formatRupiah(data.totalPengeluaran) : '-'}`
+    );
+    lines.push(
+      `Saldo total: ${formatRupiah(data.saldo)}`
     );
 
     return ctx.reply(lines.join('\n'));

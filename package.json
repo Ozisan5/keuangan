@@ -1,0 +1,25 @@
+{
+  "name": "keuangan",
+  "version": "1.0.0",
+  "description": "<p align=\"center\">   <img height=\"300\" height=\"auto\" src=\"https://github.com/sipalingnode/sipalingnode/blob/main/logo.png\"> </p>",
+  "main": "rekap.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ozisan5/keuangan.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Ozisan5/keuangan/issues"
+  },
+  "homepage": "https://github.com/Ozisan5/keuangan#readme",
+  "dependencies": {
+    "googleapis": "^182.0.0",
+    "telegraf": "^4.16.3"
+  }
+}

@@ -113,7 +113,7 @@ async function getMonthlySummary(month, year) {
   const sheetName = getSheetName();
 
   const res = await sheets.spreadsheets.values.get({
-    spreadsheetId: config.spreadsheetId,
+    spreadsheetId: spreadsheetId,
     range: `'${sheetName}'!A:D`,
   });
 
@@ -163,7 +163,7 @@ async function getYearlySummary(year) {
   const sheetName = getSheetName();
 
   const res = await sheets.spreadsheets.values.get({
-    spreadsheetId: config.spreadsheetId,
+    spreadsheetId: spreadsheetId,
     range: `'${sheetName}'!A:D`,
   });
 
@@ -224,7 +224,7 @@ async function appendRow(values) {
   const sheetName = getSheetName();
 
   await sheets.spreadsheets.values.append({
-    spreadsheetId: config.spreadsheetId,
+    spreadsheetId: spreadsheetId,
     range: `'${sheetName}'!A:D`,
     valueInputOption: 'USER_ENTERED',
     requestBody: {
@@ -241,7 +241,7 @@ async function updateRow(rowNumber, values) {
   const sheetName = getSheetName();
 
   await sheets.spreadsheets.values.update({
-    spreadsheetId: config.spreadsheetId,
+    spreadsheetId: spreadsheetId,
     range: `'${sheetName}'!A${rowNumber}:D${rowNumber}`,
     valueInputOption: 'USER_ENTERED',
     requestBody: {
@@ -256,7 +256,7 @@ async function getLastTransactionRow() {
   const sheetName = getSheetName();
 
   const res = await sheets.spreadsheets.values.get({
-    spreadsheetId: config.spreadsheetId,
+    spreadsheetId: spreadsheetId,
     range: `'${sheetName}'!A:D`,
   });
 
@@ -281,7 +281,7 @@ async function getRowByNumber(rowNumber) {
   const sheetName = getSheetName();
 
   const res = await sheets.spreadsheets.values.get({
-    spreadsheetId: config.spreadsheetId,
+    spreadsheetId: spreadsheetId,
     range: `'${sheetName}'!A${rowNumber}:D${rowNumber}`,
   });
 
@@ -307,7 +307,7 @@ async function getTodayTransactions() {
   });
 
   const res = await sheets.spreadsheets.values.get({
-    spreadsheetId: config.spreadsheetId,
+    spreadsheetId: spreadsheetId,
     range: `'${sheetName}'!A:D`,
   });
 
@@ -353,7 +353,7 @@ async function ensureHeader() {
   const sheetName = getSheetName();
 
   const res = await sheets.spreadsheets.values.get({
-    spreadsheetId: config.spreadsheetId,
+    spreadsheetId: spreadsheetId,
     range: `'${sheetName}'!A1:D2`,
   });
 
@@ -361,7 +361,7 @@ async function ensureHeader() {
 
   if (values.length === 0 || !values[0] || values[0][0] !== 'Tanggal') {
     await sheets.spreadsheets.values.update({
-      spreadsheetId: config.spreadsheetId,
+      spreadsheetId: spreadsheetId,
       range: `'${sheetName}'!A1:D1`,
       valueInputOption: 'RAW',
       requestBody: {
@@ -381,7 +381,7 @@ async function getSheetIdByName() {
   const sheets = google.sheets({ version: 'v4', auth: client });
 
   const meta = await sheets.spreadsheets.get({
-    spreadsheetId: config.spreadsheetId,
+    spreadsheetId: spreadsheetId,
   });
 
   const targetSheet = meta.data.sheets.find(
@@ -401,7 +401,7 @@ async function deleteRow(rowNumber) {
   const sheetId = await getSheetIdByName();
 
   await sheets.spreadsheets.batchUpdate({
-    spreadsheetId: config.spreadsheetId,
+    spreadsheetId: spreadsheetId,
     requestBody: {
       requests: [
         {
@@ -446,7 +446,7 @@ async function formatSheetLayout() {
   const sheetName = getSheetName();
 
   const meta = await sheets.spreadsheets.get({
-    spreadsheetId: config.spreadsheetId,
+    spreadsheetId: spreadsheetId,
   });
 
   const targetSheet = meta.data.sheets.find(
@@ -460,7 +460,7 @@ async function formatSheetLayout() {
   const sheetId = targetSheet.properties.sheetId;
 
   const valueRes = await sheets.spreadsheets.values.get({
-    spreadsheetId: config.spreadsheetId,
+    spreadsheetId: spreadsheetId,
     range: `'${sheetName}'!A:D`,
   });
 
@@ -468,7 +468,7 @@ async function formatSheetLayout() {
   const lastRow = Math.max(values.length, 1);
 
   await sheets.spreadsheets.batchUpdate({
-    spreadsheetId: config.spreadsheetId,
+    spreadsheetId: spreadsheetId,
     requestBody: {
       requests: [
         {

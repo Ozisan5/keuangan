@@ -1402,7 +1402,7 @@ bot.on('text', async (ctx) => {
 
         const get = (type) => parts.find(p => p.type === type)?.value || '';
 
-        return `${get('day')}/${get('month')}/${get('year')} ${get('hour')}:${get('minute')}`;
+        return `'${get('day')}/${get('month')}/${get('year')} ${get('hour')}:${get('minute')}`;
       })(),
         parsed.category,
         pemasukan,

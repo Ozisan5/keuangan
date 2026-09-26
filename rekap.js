@@ -2,31 +2,62 @@ const { Telegraf } = require('telegraf');
 const { google } = require('googleapis');
 const config = require('./rekap.json');
 
-if (!config.botToken) {
-  throw new Error('botToken di rekap.json belum diisi');
+// Railway Environment Variables memiliki prioritas.
+// Kalau tidak ada, gunakan rekap.json seperti sebelumnya.
+const botToken = process.env.BOT_TOKEN || config.botToken;
+const spreadsheetId = process.env.SPREADSHEET_ID || config.spreadsheetId;
+const ownerUserId = process.env.OWNER_USER_ID || config.ownerUserId;
+const sheetName = process.env.SHEET_NAME || config.sheetName || 'Sheet1';
+const timezone = process.env.TIMEZONE || config.timezone || 'Asia/Jakarta';
+
+if (!botToken) {
+  throw new Error('BOT_TOKEN / botToken belum diisi');
 }
 
-if (!config.spreadsheetId) {
-  throw new Error('spreadsheetId di rekap.json belum diisi');
+if (!spreadsheetId) {
+  throw new Error('SPREADSHEET_ID / spreadsheetId belum diisi');
 }
 
-if (!config.ownerUserId) {
-  throw new Error('ownerUserId di rekap.json belum diisi');
+if (!ownerUserId) {
+  throw new Error('OWNER_USER_ID / ownerUserId belum diisi');
 }
 
-const bot = new Telegraf(config.botToken);
+const bot = new Telegraf(botToken);
 
-const auth = new google.auth.GoogleAuth({
-  keyFile: config.credentialsFile || './rekap-credentials.json',
+// Railway menggunakan credential Google dalam bentuk Base64.
+// Codespace lokal tetap menggunakan rekap-credentials.json.
+let authOptions = {
   scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-});
+};
+
+if (process.env.GOOGLE_CREDENTIALS_BASE64) {
+  try {
+    const credentials = JSON.parse(
+      Buffer.from(
+        process.env.GOOGLE_CREDENTIALS_BASE64,
+        'base64'
+      ).toString('utf8')
+    );
+
+    authOptions.credentials = credentials;
+  } catch (error) {
+    throw new Error(
+      `GOOGLE_CREDENTIALS_BASE64 tidak valid: ${error.message}`
+    );
+  }
+} else {
+  authOptions.keyFile =
+    config.credentialsFile || './rekap-credentials.json';
+}
+
+const auth = new google.auth.GoogleAuth(authOptions);
 
 function getSheetName() {
-  return config.sheetName || 'Sheet1';
+  return sheetName;
 }
 
 function getTimezone() {
-  return config.timezone || 'Asia/Jakarta';
+  return timezone;
 }
 
 function logInfo(message) {

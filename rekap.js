@@ -10,6 +10,21 @@ const ownerUserId = process.env.OWNER_USER_ID || config.ownerUserId;
 const sheetName = process.env.SHEET_NAME || config.sheetName || 'Sheet1';
 const timezone = process.env.TIMEZONE || config.timezone || 'Asia/Jakarta';
 
+console.log(
+  `[INFO] Spreadsheet ID source: ${
+    process.env.SPREADSHEET_ID ? 'RAILWAY_ENV' : 'rekap.json'
+  }`
+);
+
+console.log(
+  `[INFO] Spreadsheet ID fingerprint: ${
+    spreadsheetId
+      ? `${spreadsheetId.slice(0, 8)}...${spreadsheetId.slice(-6)}`
+      : 'EMPTY'
+  }`
+);
+
+
 if (!botToken) {
   throw new Error('BOT_TOKEN / botToken belum diisi');
 }
